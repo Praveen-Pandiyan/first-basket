@@ -39,16 +39,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    TextField(
-                      controller: _search,
-                      onChanged: (value) {
-                        if (value.length>2) {
-                          context.read<CoursesRepo>().search(value);
-                        }else{
-                          context.read<CoursesRepo>().resetSearch();
-                        }
-                      },
-                      decoration: const InputDecoration(label: Text("Search")),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: TextField(
+                        controller: _search,
+                        onChanged: (value) {
+                          if (value.length>2) {
+                            context.read<CoursesRepo>().search(value);
+                          }else{
+                            context.read<CoursesRepo>().resetSearch();
+                          }
+                        },
+                        decoration: const InputDecoration(label: Text("Search")),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(3.0),
