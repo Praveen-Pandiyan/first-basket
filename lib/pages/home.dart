@@ -12,6 +12,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _search = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -38,26 +39,42 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    TextField(
+                      controller: _search,
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          context.read<CoursesRepo>().search(value);
+                        }else{
+                          context.read<CoursesRepo>().resetSearch();
+                        }
+                      },
+                      decoration: const InputDecoration(label: Text("Search")),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Text(
-                          ' Showing ${context.watch<CoursesRepo>().list.length} Courses', style: Theme.of(context).textTheme.titleSmall,),
+                        ' Showing ${context.watch<CoursesRepo>().list.length} Courses',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                     ),
-                    ...context
+                    ...(context
                         .watch<CoursesRepo>()
-                        .list
+                        .searchList??context
+                        .watch<CoursesRepo>()
+                        .list)
                         .map((e) => CourseCard(e)),
-
-                        Center(
-                          child: TextButton(onPressed: (){
-                             context.read<CoursesRepo>().getCourse(context.read<CoursesRepo>().list.length);
-                          }, child: const Text("Load More")),
-                        )
+                    Center(
+                      child: TextButton(
+                          onPressed: () {
+                            context.read<CoursesRepo>().getCourse(
+                                context.read<CoursesRepo>().list.length);
+                          },
+                          child: const Text("Load More")),
+                    )
                   ],
                 ),
         ),
       ),
-   
     );
   }
 }
