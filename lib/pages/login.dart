@@ -1,4 +1,6 @@
+import 'package:first_basket/repo/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,6 +10,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _email = TextEditingController(text: 'client@vinnovatelabz.com'),
+      _pass = TextEditingController(text: "123456");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.arrow_back_ios_new_rounded)),
@@ -36,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                         colorBlendMode: BlendMode.multiply,
                         width: MediaQuery.sizeOf(context).width * 0.3,
                       )),
-                      const SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     "Log in",
                     style: Theme.of(context)
@@ -55,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: TextFormField(
+                          controller: _email,
                           decoration: InputDecoration(
                               fillColor:
                                   Theme.of(context).scaffoldBackgroundColor,
@@ -65,6 +69,26 @@ class _LoginPageState extends State<LoginPage> {
                               border: InputBorder.none,
                               filled: true,
                               labelText: "Email"),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text("Password",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 5),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: TextFormField(
+                          controller: _pass,
+                          decoration: InputDecoration(
+                              fillColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              prefixIcon: const Icon(
+                                Icons.email_outlined,
+                                color: Colors.grey,
+                              ),
+                              border: InputBorder.none,
+                              filled: true,
+                              labelText: "Password"),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -81,16 +105,34 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: const Text(
-                            "Log in",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ))
+                      if (context.watch<LoginRepo>().err != null) ...[
+                        Container(
+                          decoration: const BoxDecoration(color: Colors.red),
+                          child: Text("${context.watch<LoginRepo>().err}", style: const  TextStyle(color: Colors.white),),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      InkWell(
+                        onTap: (){
+                          context.read<LoginRepo>().login(_email.text, _pass.text).then((e){
+                            print(e);
+                            if(e){
+                              print("frfr");
+                              Navigator.pushNamed(context, '/');
+                            }
+                          });
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            child: const Text(
+                              "Log in",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            )),
+                      )
                     ],
                   ))
                 ],

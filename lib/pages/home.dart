@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     TextField(
                       controller: _search,
                       onChanged: (value) {
-                        if (value.isNotEmpty) {
+                        if (value.length>2) {
                           context.read<CoursesRepo>().search(value);
                         }else{
                           context.read<CoursesRepo>().resetSearch();

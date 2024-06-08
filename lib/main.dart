@@ -1,11 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:first_basket/firebase_options.dart';
 import 'package:first_basket/pages/login.dart';
+import 'package:first_basket/repo/auth_repo.dart';
 import 'package:first_basket/repo/courses_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/home.dart';
 
-void main() {
+Future<void> main() async {
+WidgetsFlutterBinding.ensureInitialized();
+await Firebase.initializeApp();
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(const MyApp());
 }
 
@@ -18,6 +26,7 @@ class MyApp extends StatelessWidget {
       child:  MultiProvider(
           providers: [
          ChangeNotifierProvider(create: (_) => CoursesRepo()),
+         ChangeNotifierProvider(create: (_) => LoginRepo()),
           ],
          
         child: MaterialApp(
@@ -30,10 +39,10 @@ class MyApp extends StatelessWidget {
             iconTheme:const IconThemeData(color: Colors.grey),
             useMaterial3: true,
           ),
-          initialRoute: '/',
+          initialRoute: '/login',
           routes: {
             "/": (_)=>const MyHomePage(),
-            "login": (_)=>const LoginPage()
+            "/login": (_)=>const LoginPage()
           },
         ),
       ),
